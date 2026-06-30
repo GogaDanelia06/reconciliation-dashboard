@@ -113,14 +113,15 @@ src/
 │   ├── providers.tsx       # QueryClient (one per session) + devtools
 │   └── page.tsx            # renders <Dashboard/>
 ├── components/             # presentational + container components
-│   ├── dashboard.tsx       # orchestrates month state, queries, layout
+│   ├── dashboard.tsx       # app shell: sidebar + sticky bar, queries, layout
+│   ├── sidebar.tsx         # brand, period nav, section nav (scroll-spy)
 │   ├── stats-bar.tsx
-│   ├── month-tabs.tsx
 │   ├── transactions-table.tsx
 │   ├── transaction-row-actions.tsx
 │   ├── expected-vs-actual.tsx
-│   └── status-badge.tsx
-├── hooks/                  # one TanStack Query hook per concern
+│   ├── status-badge.tsx
+│   └── theme-toggle.tsx
+├── hooks/                  # TanStack Query hooks + use-scroll-spy
 ├── lib/
 │   ├── services/           # the ONLY place that talks to Supabase
 │   ├── supabase/client.ts
@@ -154,6 +155,7 @@ than re-querying.
 - **Optimistic updates** on manual row actions, with rollback on error
 - **Loading & error states** with retry
 - **Dark / light mode** — system-aware, persisted, no flash (via `next-themes` + Tailwind `darkMode: "class"` over CSS-variable theme tokens)
+- **App-shell layout** — sidebar (period + section navigation with scroll-spy) and a sticky action bar; collapses to a drawer on mobile, fully responsive
 
 ### Bonus features included
 
