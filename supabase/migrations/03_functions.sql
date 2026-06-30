@@ -45,6 +45,32 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+-- ==================== 1b. RESET MATCHING ====================
+-- Mirror of run_matching(): reverts every AUTO (inn_exact) match back to
+-- 'unmatched'. Manual matches and ignored transactions are left untouched, so
+-- the user's deliberate decisions survive a reset. Returns rows reverted.
+
+CREATE OR REPLACE FUNCTION reset_matching()
+RETURNS TABLE (reset_count integer) AS $$
+DECLARE
+  affected integer;
+BEGIN
+  WITH updated AS (
+    UPDATE bank_transactions
+    SET matched_company_id = NULL,
+        match_method       = NULL,
+        match_confidence   = NULL,
+        status             = 'unmatched'
+    WHERE match_method = 'inn_exact'
+    RETURNING id
+  )
+  SELECT count(*) INTO affected FROM updated;
+
+  RETURN QUERY SELECT affected;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- ==================== 2. EXPECTED vs ACTUAL ====================
 -- For a given month, returns one row per company that EITHER had a contract
 -- active during the month OR received matched payments during the month.

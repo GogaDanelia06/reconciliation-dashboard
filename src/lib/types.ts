@@ -60,3 +60,8 @@ export interface ExpectedVsActualRow {
 export interface MatchingResult {
   newly_matched: number;
 }
+
+// Return shape of the reset_matching() RPC.
+export interface ResetResult {
+  reset_count: number;
+}

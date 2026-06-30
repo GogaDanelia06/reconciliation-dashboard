@@ -145,7 +145,7 @@ than re-querying.
 
 ## Features
 
-- **Auto-matching** by tax ID (DB function), with a one-click trigger
+- **Auto-matching** by tax ID (DB function), with a one-click trigger — and a **Reset** that reverts auto matches (manual/ignored decisions are preserved), so reconciliation is fully reversible and replayable
 - **Stats bar:** total / matched / unmatched counts + amounts, and match rate
 - **Transactions table:** sortable (date, amount), filterable (status), searchable
   (sender / tax ID), colour-coded status, per-row manual match / ignore / reset
