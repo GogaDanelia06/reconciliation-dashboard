@@ -5,7 +5,7 @@ transactions arrive from the Bank of Georgia API and need to be matched against
 existing contracts — *who paid, who didn't, and how the actual money compares to
 what each contract expects.*
 
-**Live demo:** _add Vercel URL here_
+**Live demo:** https://reconciliation-dashboard-roan.vercel.app
 
 ![Dashboard](docs/screenshot.png)
 
