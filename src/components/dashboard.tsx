@@ -10,6 +10,7 @@ import { useResetMatching } from "@/hooks/use-reset-matching";
 import { useScrollSpy } from "@/hooks/use-scroll-spy";
 import { Sidebar, SECTIONS } from "./sidebar";
 import { StatsBar } from "./stats-bar";
+import { OverviewChart } from "./overview-chart";
 import { TransactionsTable } from "./transactions-table";
 import { ExpectedVsActual } from "./expected-vs-actual";
 
@@ -132,7 +133,10 @@ export function Dashboard() {
             <div className="space-y-8">
               <section id="overview" className="scroll-mt-24">
                 <SectionHeading title="Overview" subtitle={monthLabel} />
-                <StatsBar stats={stats} />
+                <div className="space-y-4">
+                  <StatsBar stats={stats} />
+                  <OverviewChart stats={stats} />
+                </div>
               </section>
 
               <section id="transactions" className="scroll-mt-24">

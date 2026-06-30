@@ -18,6 +18,24 @@ function rowAccent(row: ExpectedVsActualRow): string {
   return "text-red-600 dark:text-red-400";
 }
 
+// Coverage = how much of the expected amount was actually paid, as a bar.
+// Amber flags "paid with no active contract this month" (expected = 0).
+function coverage(row: ExpectedVsActualRow): { pct: number; barClass: string } {
+  if (row.expected === 0) return { pct: 100, barClass: "bg-amber-500" };
+  const pct = Math.min((row.actual / row.expected) * 100, 100);
+  if (row.actual === 0) return { pct: 0, barClass: "bg-line" };
+  return { pct, barClass: row.actual >= row.expected ? "bg-green-500" : "bg-red-500" };
+}
+
+function CoverageBar({ row }: { row: ExpectedVsActualRow }) {
+  const { pct, barClass } = coverage(row);
+  return (
+    <div className="h-2 w-24 overflow-hidden rounded-full bg-line">
+      <div className={`h-full rounded-full ${barClass} transition-all duration-700`} style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
 function toCsv(rows: ExpectedVsActualRow[]): string {
   const header = ["Company", "Tax ID", "Expected", "Actual", "Difference"];
   const lines = rows.map((r) =>
@@ -66,12 +84,13 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] text-left text-sm">
+        <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="border-b border-line bg-card-hover text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3 font-semibold">Company</th>
               <th className="px-4 py-3 text-right font-semibold">Expected</th>
               <th className="px-4 py-3 text-right font-semibold">Actual</th>
+              <th className="px-4 py-3 font-semibold">Coverage</th>
               <th className="px-4 py-3 text-right font-semibold">Difference</th>
             </tr>
           </thead>
@@ -83,6 +102,9 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
                 <td className={`whitespace-nowrap px-4 py-3 text-right font-medium ${rowAccent(row)}`}>
                   {formatGel(row.actual)}
                 </td>
+                <td className="px-4 py-3">
+                  <CoverageBar row={row} />
+                </td>
                 <td className={`whitespace-nowrap px-4 py-3 text-right font-medium ${rowAccent(row)}`}>
                   {row.difference > 0 ? "+" : ""}
                   {formatGel(row.difference)}
@@ -91,7 +113,7 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-muted">
+                <td colSpan={5} className="px-4 py-12 text-center text-muted">
                   No active contracts or payments this month.
                 </td>
               </tr>
@@ -103,6 +125,7 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
                 <td className="px-4 py-3">Total</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right">{formatGel(totals.expected)}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right">{formatGel(totals.actual)}</td>
+                <td className="px-4 py-3" />
                 <td className="whitespace-nowrap px-4 py-3 text-right">
                   {totals.difference > 0 ? "+" : ""}
                   {formatGel(totals.difference)}
