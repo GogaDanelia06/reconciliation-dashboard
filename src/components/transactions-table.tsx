@@ -63,17 +63,19 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
     sortField === field ? (sortDirection === "asc" ? " ↑" : " ↓") : "";
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="inline-flex flex-wrap gap-1">
+      <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="inline-flex flex-wrap gap-1 rounded-lg bg-card-hover p-1">
           {STATUS_FILTERS.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => setStatus(s)}
               className={`rounded-md px-3 py-1 text-sm font-medium capitalize transition-colors ${
-                status === s ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100"
+                status === s
+                  ? "bg-card text-ink shadow-sm"
+                  : "text-muted hover:text-ink"
               }`}
             >
               {s}
@@ -85,24 +87,24 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search sender or tax ID…"
-          className="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm sm:w-64"
+          className="w-full rounded-lg border border-line bg-page px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 sm:w-64"
         />
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <thead className="border-b border-line bg-card-hover text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3">
-                <button type="button" onClick={() => toggleSort("entry_date")} className="font-semibold hover:text-slate-900">
+                <button type="button" onClick={() => toggleSort("entry_date")} className="font-semibold transition-colors hover:text-ink">
                   Date{sortIndicator("entry_date")}
                 </button>
               </th>
               <th className="px-4 py-3 font-semibold">Sender</th>
               <th className="px-4 py-3 font-semibold">Tax ID</th>
               <th className="px-4 py-3 text-right">
-                <button type="button" onClick={() => toggleSort("amount")} className="font-semibold hover:text-slate-900">
+                <button type="button" onClick={() => toggleSort("amount")} className="font-semibold transition-colors hover:text-ink">
                   Amount{sortIndicator("amount")}
                 </button>
               </th>
@@ -111,19 +113,19 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
               <th className="px-4 py-3 font-semibold">Action</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {visible.map((tx) => (
-              <tr key={tx.id} className="hover:bg-slate-50">
-                <td className="whitespace-nowrap px-4 py-3 text-slate-700">{formatDate(tx.entry_date)}</td>
-                <td className="px-4 py-3 text-slate-700">
+              <tr key={tx.id} className="transition-colors hover:bg-card-hover">
+                <td className="whitespace-nowrap px-4 py-3 text-ink">{formatDate(tx.entry_date)}</td>
+                <td className="px-4 py-3 text-ink">
                   <span className="block max-w-[200px] truncate" title={tx.sender_name ?? ""}>
                     {tx.sender_name ?? "—"}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-500">{tx.sender_inn ?? "—"}</td>
-                <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-slate-900">{formatGel(tx.amount)}</td>
+                <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">{tx.sender_inn ?? "—"}</td>
+                <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-ink">{formatGel(tx.amount)}</td>
                 <td className="px-4 py-3"><StatusBadge status={tx.status} /></td>
-                <td className="px-4 py-3 text-slate-700">{tx.matched_company?.name ?? "—"}</td>
+                <td className="px-4 py-3 text-ink">{tx.matched_company?.name ?? <span className="text-muted">—</span>}</td>
                 <td className="px-4 py-3">
                   <TransactionRowActions transaction={tx} companies={companies} monthKey={monthKey} />
                 </td>
@@ -131,7 +133,7 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={7} className="px-4 py-12 text-center text-muted">
                   No transactions match these filters.
                 </td>
               </tr>

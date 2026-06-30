@@ -9,13 +9,13 @@ interface ExpectedVsActualProps {
 }
 
 // Row colour rule (per spec):
-//   grey  — no payment received (actual = 0)
+//   muted — no payment received (actual = 0)
 //   green — paid at least the expected amount
 //   red   — paid less than expected
 function rowAccent(row: ExpectedVsActualRow): string {
-  if (row.actual === 0) return "text-slate-400";
-  if (row.actual >= row.expected) return "text-green-600";
-  return "text-red-600";
+  if (row.actual === 0) return "text-muted";
+  if (row.actual >= row.expected) return "text-green-600 dark:text-green-400";
+  return "text-red-600 dark:text-red-400";
 }
 
 function toCsv(rows: ExpectedVsActualRow[]): string {
@@ -49,17 +49,17 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
   };
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-200 p-4">
+    <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
+      <div className="flex items-center justify-between border-b border-line p-4">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Expected vs Actual</h2>
-          <p className="text-sm text-slate-500">{monthLabel} — active contracts vs matched payments</p>
+          <h2 className="text-base font-semibold text-ink">Expected vs Actual</h2>
+          <p className="text-sm text-muted">{monthLabel} — active contracts vs matched payments</p>
         </div>
         <button
           type="button"
           onClick={downloadCsv}
           disabled={rows.length === 0}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="rounded-lg border border-line px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:bg-card-hover disabled:opacity-50"
         >
           Export CSV
         </button>
@@ -67,7 +67,7 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-left text-sm">
-          <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+          <thead className="border-b border-line bg-card-hover text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3 font-semibold">Company</th>
               <th className="px-4 py-3 text-right font-semibold">Expected</th>
@@ -75,11 +75,11 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
               <th className="px-4 py-3 text-right font-semibold">Difference</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-line">
             {rows.map((row) => (
-              <tr key={row.company_id} className="hover:bg-slate-50">
-                <td className="px-4 py-3 text-slate-700">{row.company_name}</td>
-                <td className="whitespace-nowrap px-4 py-3 text-right text-slate-600">{formatGel(row.expected)}</td>
+              <tr key={row.company_id} className="transition-colors hover:bg-card-hover">
+                <td className="px-4 py-3 text-ink">{row.company_name}</td>
+                <td className="whitespace-nowrap px-4 py-3 text-right text-muted">{formatGel(row.expected)}</td>
                 <td className={`whitespace-nowrap px-4 py-3 text-right font-medium ${rowAccent(row)}`}>
                   {formatGel(row.actual)}
                 </td>
@@ -91,14 +91,14 @@ export function ExpectedVsActual({ rows, monthLabel }: ExpectedVsActualProps) {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-10 text-center text-slate-400">
+                <td colSpan={4} className="px-4 py-12 text-center text-muted">
                   No active contracts or payments this month.
                 </td>
               </tr>
             )}
           </tbody>
           {rows.length > 0 && (
-            <tfoot className="border-t border-slate-200 bg-slate-50 font-semibold text-slate-900">
+            <tfoot className="border-t border-line bg-card-hover font-semibold text-ink">
               <tr>
                 <td className="px-4 py-3">Total</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right">{formatGel(totals.expected)}</td>

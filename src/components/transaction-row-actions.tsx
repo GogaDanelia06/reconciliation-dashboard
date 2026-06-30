@@ -24,8 +24,11 @@ export function TransactionRowActions({ transaction, companies, monthKey }: RowA
     updateTx.mutate({ id: transaction.id, status, matchedCompanyId: null, monthKey });
 
   if (transaction.match_method === "inn_exact") {
-    return <span className="text-xs text-slate-400">auto</span>;
+    return <span className="text-xs text-muted">auto</span>;
   }
+
+  const ghostBtn =
+    "rounded-md px-2 py-1 text-xs font-medium text-muted transition-colors hover:bg-card-hover hover:text-ink disabled:opacity-50";
 
   return (
     <div className="flex items-center gap-2">
@@ -35,7 +38,7 @@ export function TransactionRowActions({ transaction, companies, monthKey }: RowA
           defaultValue=""
           disabled={isPending}
           onChange={(e) => assignCompany(e.target.value)}
-          className="max-w-[140px] rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 disabled:opacity-50"
+          className="max-w-[140px] rounded-md border border-line bg-page px-2 py-1 text-xs text-ink focus:border-brand focus:outline-none disabled:opacity-50"
         >
           <option value="" disabled>
             Match…
@@ -49,23 +52,13 @@ export function TransactionRowActions({ transaction, companies, monthKey }: RowA
       )}
 
       {transaction.status === "unmatched" && (
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => setStatus("ignored")}
-          className="rounded-md px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 disabled:opacity-50"
-        >
+        <button type="button" disabled={isPending} onClick={() => setStatus("ignored")} className={ghostBtn}>
           Ignore
         </button>
       )}
 
       {(transaction.status === "ignored" || transaction.match_method === "manual") && (
-        <button
-          type="button"
-          disabled={isPending}
-          onClick={() => setStatus("unmatched")}
-          className="rounded-md px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 disabled:opacity-50"
-        >
+        <button type="button" disabled={isPending} onClick={() => setStatus("unmatched")} className={ghostBtn}>
           Reset
         </button>
       )}

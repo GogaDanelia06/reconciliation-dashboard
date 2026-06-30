@@ -2,8 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Semantic theme tokens. Each flips automatically in dark mode, so components
+   reference one set of classes (bg-card, text-ink, border-line, …) and never
+   hard-code light/dark colours. */
+:root {
+  --page: 248 250 252; /* slate-50  */
+  --card: 255 255 255;
+  --card-hover: 248 250 252;
+  --line: 226 232 240; /* slate-200 */
+  --ink: 15 23 42; /* slate-900 */
+  --muted: 100 116 139; /* slate-500 */
+  --brand: 79 70 229; /* indigo-600 */
+  --brand-hover: 67 56 202; /* indigo-700 */
+  --brand-ink: 255 255 255;
+}
+
+.dark {
+  --page: 2 6 23; /* slate-950 */
+  --card: 15 23 42; /* slate-900 */
+  --card-hover: 30 41 59; /* slate-800 */
+  --line: 30 41 59; /* slate-800 */
+  --ink: 241 245 249; /* slate-100 */
+  --muted: 148 163 184; /* slate-400 */
+  --brand: 99 102 241; /* indigo-500 */
+  --brand-hover: 129 140 248; /* indigo-400 */
+  --brand-ink: 255 255 255;
+}
+
 body {
-  background: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
+  background: rgb(var(--page));
+  color: rgb(var(--ink));
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

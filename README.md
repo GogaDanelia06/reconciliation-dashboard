@@ -153,6 +153,7 @@ than re-querying.
 - **Expected vs Actual** per company, colour-coded, with totals
 - **Optimistic updates** on manual row actions, with rollback on error
 - **Loading & error states** with retry
+- **Dark / light mode** — system-aware, persisted, no flash (via `next-themes` + Tailwind `darkMode: "class"` over CSS-variable theme tokens)
 
 ### Bonus features included
 

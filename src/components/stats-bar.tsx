@@ -3,51 +3,54 @@ import type { MonthStats } from "@/lib/stats";
 
 interface StatCardProps {
   label: string;
-  count: number;
-  amount: string;
-  accent: string;
+  value: string;
+  sub: string;
+  valueClass?: string;
+  dotClass?: string;
 }
 
-function StatCard({ label, count, amount, accent }: StatCardProps) {
+function StatCard({ label, value, sub, valueClass = "text-ink", dotClass }: StatCardProps) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-      <p className="text-sm font-medium text-slate-500">{label}</p>
-      <p className={`mt-1 text-2xl font-semibold ${accent}`}>{count}</p>
-      <p className="mt-0.5 text-sm text-slate-500">{amount}</p>
+    <div className="rounded-2xl border border-line bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div className="flex items-center gap-2">
+        {dotClass && <span className={`h-2 w-2 rounded-full ${dotClass}`} />}
+        <p className="text-sm font-medium text-muted">{label}</p>
+      </div>
+      <p className={`mt-2 text-3xl font-semibold tracking-tight ${valueClass}`}>{value}</p>
+      <p className="mt-1 text-sm text-muted">{sub}</p>
     </div>
   );
 }
 
 export function StatsBar({ stats }: { stats: MonthStats }) {
+  const reconcilable = stats.matched.count + stats.unmatched.count;
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <StatCard
         label="Total transactions"
-        count={stats.total.count}
-        amount={formatGel(stats.total.amount)}
-        accent="text-slate-900"
+        value={String(stats.total.count)}
+        sub={formatGel(stats.total.amount)}
       />
       <StatCard
         label="Matched"
-        count={stats.matched.count}
-        amount={formatGel(stats.matched.amount)}
-        accent="text-green-600"
+        value={String(stats.matched.count)}
+        sub={formatGel(stats.matched.amount)}
+        valueClass="text-green-600 dark:text-green-400"
+        dotClass="bg-green-500"
       />
       <StatCard
         label="Unmatched"
-        count={stats.unmatched.count}
-        amount={formatGel(stats.unmatched.amount)}
-        accent="text-red-600"
+        value={String(stats.unmatched.count)}
+        sub={formatGel(stats.unmatched.amount)}
+        valueClass="text-red-600 dark:text-red-400"
+        dotClass="bg-red-500"
       />
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <p className="text-sm font-medium text-slate-500">Match rate</p>
-        <p className="mt-1 text-2xl font-semibold text-slate-900">
-          {formatPercent(stats.matchRate)}
-        </p>
-        <p className="mt-0.5 text-sm text-slate-500">
-          {stats.matched.count} of {stats.matched.count + stats.unmatched.count} reconcilable
-        </p>
-      </div>
+      <StatCard
+        label="Match rate"
+        value={formatPercent(stats.matchRate)}
+        sub={`${stats.matched.count} of ${reconcilable} reconcilable`}
+        dotClass="bg-brand"
+      />
     </div>
   );
 }
