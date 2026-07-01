@@ -24,9 +24,6 @@ export function MatchDialog({ open, onClose, defaultMonthKey, onSaved }: MatchDi
       preview.reset();
       run.reset();
     }
-    // preview/run are stable mutation objects; re-running on their identity
-    // would loop. Only reset on open / month change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, defaultMonthKey]);
 
   useEffect(() => {

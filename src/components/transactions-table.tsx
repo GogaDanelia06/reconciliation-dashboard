@@ -19,7 +19,6 @@ interface TransactionsTableProps {
 
 const STATUS_FILTERS: StatusFilter[] = ["all", "matched", "unmatched", "ignored"];
 
-// Column widths (Date, Sender, Tax ID, Amount, Status, Company, Action).
 const COLUMN_WIDTHS = ["12%", "16%", "12%", "11%", "12%", "14%", "23%"];
 
 export function TransactionsTable({ transactions, monthKey }: TransactionsTableProps) {
@@ -91,10 +90,6 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
           className="w-full rounded-lg border border-line bg-page px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 sm:w-64"
         />
       </div>
-
-      {/* Table — fills the card on desktop (no scroll); on very narrow screens
-          it keeps a min width and scrolls horizontally instead of overlapping.
-          Column widths: Date, Sender, Tax ID, Amount, Status, Company, Action. */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[820px] table-fixed text-left text-sm">
           {/* single line: no whitespace text nodes allowed inside <colgroup> */}

@@ -16,8 +16,8 @@ import { MatchDialog } from "./match-dialog";
 
 export function Dashboard() {
   const [monthKey, setMonthKey] = useState<string>(DEFAULT_MONTH);
-  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
-  const [collapsed, setCollapsed] = useState(false); // desktop hide
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false); 
   const [matchOpen, setMatchOpen] = useState(false);
   const [matchFlash, setMatchFlash] = useState<string | null>(null);
   const monthLabel = MONTHS.find((m) => m.key === monthKey)?.label ?? "";
@@ -43,8 +43,6 @@ export function Dashboard() {
     setSidebarOpen(false);
   };
 
-  // One toggle for both breakpoints: collapse the fixed sidebar on desktop,
-  // open the drawer on mobile.
   const toggleSidebar = () => {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
       setCollapsed((c) => !c);

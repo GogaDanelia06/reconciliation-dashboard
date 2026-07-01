@@ -5,7 +5,7 @@ export interface MonthStats {
   matched: { count: number; amount: number };
   unmatched: { count: number; amount: number };
   ignored: { count: number; amount: number };
-  matchRate: number; // matched / (matched + unmatched); excludes ignored
+  matchRate: number;
 }
 
 export function computeStats(transactions: BankTransaction[]): MonthStats {
