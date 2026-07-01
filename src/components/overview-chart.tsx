@@ -1,8 +1,6 @@
 import { formatGel, formatPercent } from "@/lib/format";
 import type { MonthStats } from "@/lib/stats";
 
-// Donut ring for the match rate (by count), drawn with two SVG circles: a track
-// and a progress arc whose dash offset encodes the percentage.
 function Donut({ rate }: { rate: number }) {
   const size = 132;
   const stroke = 14;

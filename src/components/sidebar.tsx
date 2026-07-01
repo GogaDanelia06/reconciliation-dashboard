@@ -4,8 +4,6 @@ import type { ReactNode } from "react";
 import { MONTHS } from "@/lib/months";
 import { ThemeToggle } from "./theme-toggle";
 
-// Section anchors the sidebar nav links to (shared with the scroll-spy in the
-// dashboard).
 export const SECTIONS = [
   { id: "overview", label: "Overview" },
   { id: "transactions", label: "Transactions" },
@@ -53,7 +51,7 @@ export function Sidebar({ selectedMonth, onSelectMonth, activeSection, onNavigat
         </div>
       </div>
 
-      {/* Period (month navigation) */}
+      {/* (month navigation) */}
       <nav className="space-y-1">
         <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted">Period</p>
         {MONTHS.map((month) => {

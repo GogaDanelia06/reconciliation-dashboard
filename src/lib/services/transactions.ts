@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase/client";
 import { monthRange } from "@/lib/months";
 import type { TransactionStatus, TransactionWithCompany } from "@/lib/types";
 
-// Columns + embedded matched company, requested once and reused.
 const TRANSACTION_SELECT = `
   id, doc_key, entry_date, amount, currency,
   sender_name, sender_inn, sender_account, purpose,
@@ -11,10 +10,6 @@ const TRANSACTION_SELECT = `
   matched_company:companies!bank_transactions_matched_company_id_fkey ( id, name, tax_id )
 ` as const;
 
-// All transactions whose entry_date falls in the given month. We fetch the
-// whole month once and do sort / status filter / search client-side — the
-// dataset is tiny (≤ ~50 rows/month) and that keeps stats accurate regardless
-// of the active table filter.
 export async function fetchTransactionsByMonth(
   monthKey: string,
 ): Promise<TransactionWithCompany[]> {
@@ -28,13 +23,9 @@ export async function fetchTransactionsByMonth(
     .order("entry_date", { ascending: false });
 
   if (error) throw new Error(`Failed to load transactions: ${error.message}`);
-  // Supabase types the embedded relation loosely; we own the schema, so we
-  // assert to our hand-written type.
   return (data ?? []) as unknown as TransactionWithCompany[];
 }
 
-// Manually override a single transaction's status / match. Used by the row
-// actions (ignore, manual match, reset to unmatched).
 export async function updateTransactionMatch(params: {
   id: string;
   status: TransactionStatus;

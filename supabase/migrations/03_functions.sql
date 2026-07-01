@@ -18,11 +18,15 @@
 -- because the same company shows up under name variations
 -- ("შპს გეოტრანსი", "გეოტრანსი (ფილიალი)", "გეოტრანსი") with one tax_id.
 --
+-- Scope: p_months is an array of month-start dates (e.g. {'2026-06-01'}). NULL
+-- means all months. Only transactions in those months are matched.
+--
 -- Idempotent: re-running only touches rows still 'unmatched', so it never
 -- overrides a 'manual' match or an 'ignored' transaction.
 -- Returns the number of rows newly matched in this run.
 
-CREATE OR REPLACE FUNCTION run_matching()
+DROP FUNCTION IF EXISTS run_matching();
+CREATE OR REPLACE FUNCTION run_matching(p_months date[] DEFAULT NULL)
 RETURNS TABLE (newly_matched integer) AS $$
 DECLARE
   affected integer;
@@ -36,6 +40,7 @@ BEGIN
     FROM companies c
     WHERE bt.sender_inn = c.tax_id
       AND bt.status = 'unmatched'
+      AND (p_months IS NULL OR date_trunc('month', bt.entry_date)::date = ANY(p_months))
     RETURNING bt.id
   )
   SELECT count(*) INTO affected FROM updated;
@@ -43,6 +48,33 @@ BEGIN
   RETURN QUERY SELECT affected;
 END;
 $$ LANGUAGE plpgsql;
+
+
+-- ==================== 1a. PREVIEW MATCHING (dry run) ====================
+-- Read-only: returns the unmatched transactions that WOULD be matched (with the
+-- company they'd map to) for the given months, WITHOUT writing anything. Lets
+-- the UI show a review step before the user commits.
+
+CREATE OR REPLACE FUNCTION preview_matching(p_months date[] DEFAULT NULL)
+RETURNS TABLE (
+  id           uuid,
+  entry_date   date,
+  amount       numeric,
+  sender_name  text,
+  sender_inn   text,
+  company_id   uuid,
+  company_name text
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT bt.id, bt.entry_date, bt.amount, bt.sender_name, bt.sender_inn, c.id, c.name
+  FROM bank_transactions bt
+  JOIN companies c ON bt.sender_inn = c.tax_id
+  WHERE bt.status = 'unmatched'
+    AND (p_months IS NULL OR date_trunc('month', bt.entry_date)::date = ANY(p_months))
+  ORDER BY bt.entry_date DESC;
+END;
+$$ LANGUAGE plpgsql STABLE;
 
 
 -- ==================== 1b. RESET MATCHING ====================

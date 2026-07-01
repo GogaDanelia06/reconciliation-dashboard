@@ -1,7 +1,3 @@
-// Centralised TanStack Query key factory. Keeping keys in one place keeps
-// invalidation honest: the matching mutation invalidates exactly the keys
-// declared here, and there's no string drift between fetch and invalidate.
-
 export const queryKeys = {
   companies: ["companies"] as const,
 

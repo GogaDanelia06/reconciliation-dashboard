@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
-// Sun / moon toggle. Renders a neutral placeholder until mounted so the server
-// and client markup match (next-themes can't know the theme during SSR).
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

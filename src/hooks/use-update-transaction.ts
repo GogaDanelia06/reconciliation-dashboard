@@ -7,12 +7,9 @@ interface UpdateArgs {
   id: string;
   status: TransactionStatus;
   matchedCompanyId: string | null;
-  monthKey: string; // which month's cache to update / invalidate
+  monthKey: string;
 }
 
-// Manual row actions (ignore / manual match / reset). Optimistically patches
-// the cached row so the table reacts instantly, rolls back on error, and
-// refetches expected-vs-actual (sums changed) on settle.
 export function useUpdateTransaction() {
   const queryClient = useQueryClient();
 

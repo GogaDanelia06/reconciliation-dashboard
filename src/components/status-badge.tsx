@@ -1,7 +1,5 @@
 import type { TransactionStatus } from "@/lib/types";
 
-// Status → colour mapping, shared by the table and anywhere else a status is
-// shown. Green matched, red unmatched, grey ignored — tuned for both themes.
 const STATUS_STYLES: Record<TransactionStatus, { label: string; className: string }> = {
   matched: {
     label: "Matched",

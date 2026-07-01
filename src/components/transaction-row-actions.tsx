@@ -9,8 +9,6 @@ interface RowActionsProps {
   monthKey: string;
 }
 
-// Per-row manual overrides. Auto (inn_exact) matches are left read-only;
-// everything else can be manually matched, ignored, or reset.
 export function TransactionRowActions({ transaction, companies, monthKey }: RowActionsProps) {
   const updateTx = useUpdateTransaction();
   const isPending = updateTx.isPending;

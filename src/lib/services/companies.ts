@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import type { Company } from "@/lib/types";
 
-// All companies, alphabetical. Small, rarely-changing reference data.
 export async function fetchCompanies(): Promise<Company[]> {
   const { data, error } = await supabase
     .from("companies")

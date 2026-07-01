@@ -8,9 +8,6 @@ export interface MonthStats {
   matchRate: number; // matched / (matched + unmatched); excludes ignored
 }
 
-// Derives the stats-bar summary from the month's transactions. Pure function —
-// the same list drives both the stats and the (separately filtered) table, so
-// the stats always reflect the whole month, not the active filter.
 export function computeStats(transactions: BankTransaction[]): MonthStats {
   const acc: MonthStats = {
     total: { count: 0, amount: 0 },

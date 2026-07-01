@@ -8,18 +8,12 @@ interface ExpectedVsActualProps {
   monthLabel: string;
 }
 
-// Row colour rule (per spec):
-//   muted — no payment received (actual = 0)
-//   green — paid at least the expected amount
-//   red   — paid less than expected
 function rowAccent(row: ExpectedVsActualRow): string {
   if (row.actual === 0) return "text-muted";
   if (row.actual >= row.expected) return "text-green-600 dark:text-green-400";
   return "text-red-600 dark:text-red-400";
 }
 
-// Coverage = how much of the expected amount was actually paid, as a bar.
-// Amber flags "paid with no active contract this month" (expected = 0).
 function coverage(row: ExpectedVsActualRow): { pct: number; barClass: string } {
   if (row.expected === 0) return { pct: 100, barClass: "bg-amber-500" };
   const pct = Math.min((row.actual / row.expected) * 100, 100);
