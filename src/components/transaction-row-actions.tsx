@@ -29,14 +29,14 @@ export function TransactionRowActions({ transaction, companies, monthKey }: RowA
     "rounded-md px-2 py-1 text-xs font-medium text-muted transition-colors hover:bg-card-hover hover:text-ink disabled:opacity-50";
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       {transaction.status !== "matched" && (
         <select
           aria-label="Assign company"
           defaultValue=""
           disabled={isPending}
           onChange={(e) => assignCompany(e.target.value)}
-          className="max-w-[140px] rounded-md border border-line bg-page px-2 py-1 text-xs text-ink focus:border-brand focus:outline-none disabled:opacity-50"
+          className="w-full min-w-0 max-w-[120px] rounded-md border border-line bg-page px-2 py-1 text-xs text-ink focus:border-brand focus:outline-none disabled:opacity-50"
         >
           <option value="" disabled>
             Match…

@@ -89,9 +89,18 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
         />
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] text-left text-sm">
+      {/* Table — fits the card width, no scrolling */}
+      <div>
+        <table className="w-full table-fixed text-left text-sm">
+          <colgroup>
+            <col className="w-[10%]" /> {/* Date */}
+            <col className="w-[16%]" /> {/* Sender */}
+            <col className="w-[12%]" /> {/* Tax ID */}
+            <col className="w-[11%]" /> {/* Amount */}
+            <col className="w-[12%]" /> {/* Status */}
+            <col className="w-[14%]" /> {/* Matched company */}
+            <col className="w-[25%]" /> {/* Action */}
+          </colgroup>
           <thead className="border-b border-line bg-card-hover text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3">
@@ -116,15 +125,17 @@ export function TransactionsTable({ transactions, monthKey }: TransactionsTableP
               <tr key={tx.id} className="transition-colors hover:bg-card-hover">
                 <td className="whitespace-nowrap px-4 py-3 text-ink">{formatDate(tx.entry_date)}</td>
                 <td className="px-4 py-3 text-ink">
-                  <span className="block max-w-[200px] truncate" title={tx.sender_name ?? ""}>
+                  <span className="block truncate" title={tx.sender_name ?? ""}>
                     {tx.sender_name ?? "—"}
                   </span>
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted">{tx.sender_inn ?? "—"}</td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-ink">{formatGel(tx.amount)}</td>
                 <td className="px-4 py-3"><StatusBadge status={tx.status} /></td>
-                <td className="px-4 py-3 text-ink">{tx.matched_company?.name ?? <span className="text-muted">—</span>}</td>
-                <td className="px-4 py-3">
+                <td className="truncate px-4 py-3 text-ink" title={tx.matched_company?.name ?? ""}>
+                  {tx.matched_company?.name ?? <span className="text-muted">—</span>}
+                </td>
+                <td className="px-3 py-3">
                   <TransactionRowActions transaction={tx} companies={companies} monthKey={monthKey} />
                 </td>
               </tr>

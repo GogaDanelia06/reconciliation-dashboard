@@ -16,7 +16,8 @@ import { MatchDialog } from "./match-dialog";
 
 export function Dashboard() {
   const [monthKey, setMonthKey] = useState<string>(DEFAULT_MONTH);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
+  const [collapsed, setCollapsed] = useState(false); // desktop hide
   const [matchOpen, setMatchOpen] = useState(false);
   const [matchFlash, setMatchFlash] = useState<string | null>(null);
   const monthLabel = MONTHS.find((m) => m.key === monthKey)?.label ?? "";
@@ -42,15 +43,25 @@ export function Dashboard() {
     setSidebarOpen(false);
   };
 
+  // One toggle for both breakpoints: collapse the fixed sidebar on desktop,
+  // open the drawer on mobile.
+  const toggleSidebar = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches) {
+      setCollapsed((c) => !c);
+    } else {
+      setSidebarOpen((o) => !o);
+    }
+  };
+
   const busy = resetMatching.isPending;
 
   return (
     <div className="min-h-screen">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-line bg-card transition-transform duration-200 lg:w-64 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-line bg-card transition-transform duration-200 lg:w-64 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } ${collapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
       >
         <Sidebar
           selectedMonth={monthKey}
@@ -64,16 +75,16 @@ export function Dashboard() {
       )}
 
       {/* Main column */}
-      <div className="lg:pl-64">
+      <div className={`transition-[padding] duration-200 ${collapsed ? "lg:pl-0" : "lg:pl-64"}`}>
         {/* action bar */}
         <header className="sticky top-0 z-30 border-b border-line bg-page/80 backdrop-blur">
           <div className="flex items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                aria-label="Open menu"
-                onClick={() => setSidebarOpen(true)}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted hover:bg-card-hover hover:text-ink lg:hidden"
+                aria-label="Toggle sidebar"
+                onClick={toggleSidebar}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted hover:bg-card-hover hover:text-ink"
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-5 w-5"><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" /></svg>
               </button>
